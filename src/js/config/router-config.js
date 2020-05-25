@@ -324,9 +324,9 @@ const initRouter = () => {
         }
         HeyUI.$LoadingBar.start();
         if (to.meta && to.meta.title) {
-            document.title = to.meta.title + ' - MeEdu';
+            document.title = to.meta.title + ' - 华视风行';
         } else {
-            document.title = 'MeEdu';
+            document.title = '华视风行';
         }
         isFirstRouter = false;
         next();

@@ -1,7 +1,7 @@
 {
-  "name": "meedu-backend",
+  "name": "hsfx-backend",
   "version": "1.0.0",
-  "description": "meedu backend.",
+  "description": "hsfx backend.",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {

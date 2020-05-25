@@ -107,7 +107,7 @@
   <div class="login-vue">
     <div class="login-container">
       <div class="login-content">
-        <div class="login-title">MeEdu</div>
+        <div class="login-title">华视风行</div>
         <div class="login-name login-input">
           <input type="text" name="username" v-model="login.username" autocomplete="off"/>
           <span class="placeholder" :class="{fixed: login.username != '' && login.username != null}">邮箱</span>
@@ -120,7 +120,7 @@
           <Button block color="primary" size="l" @click="submit">登录</Button>
         </div>
       </div>
-      <p class="copyright"> Copyright © 2019 - <a href="https://github.com/Qsnh/meedu">MeEdu</a></p>
+      <p class="copyright"> Copyright © 2019 - <a href="http://www.huashifengxing.com/">华视风行</a></p>
     </div>
   </div>
 </template>
