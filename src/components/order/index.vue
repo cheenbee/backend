@@ -26,42 +26,48 @@
         <TableItem prop="id" title="ID"></TableItem>
         <TableItem prop="order_id" title="订单号"></TableItem>
         <TableItem prop="charge" title="价格" unit="元"></TableItem>
-        <TableItem prop="created_at" title="时间"></TableItem>
         <TableItem prop="status_text" title="状态"></TableItem>
         <TableItem title="用户">
           <template slot-scope="{ data }">
-            <p>
-              <img :src="users[data.user_id].avatar" width="18" height="18" class="avatar" />
-            </p>
-            <p>{{users[data.user_id].nick_name}}</p>
+            <span>{{users[data.user_id].nick_name}}</span>
           </template>
         </TableItem>
         <TableItem title="商品">
           <template slot-scope="{ data }">
             <ul>
-              <li v-for="goods in data.goods">{{ goods.goods_text }}({{goods.goods_id}})x{{ goods.num }}</li>
+              <li v-for="goods in data.goods" :key="goods.id">{{ goods.goods_text }}x{{ goods.num }}</li>
             </ul>
           </template>
         </TableItem>
         <TableItem title="支付记录">
           <template slot-scope="{ data }">
             <ul>
-              <li v-for="record in data.paid_records">
-                {{record.paid_type_text}}:￥{{record.paid_total}}
-              </li>
+              <li
+                v-for="record in data.paid_records"
+                :key="record.id"
+              >{{record.paid_type_text}}:￥{{record.paid_total}}</li>
             </ul>
           </template>
         </TableItem>
+        <TableItem prop="created_at" title="时间"></TableItem>
         <TableItem :width="200" title="操作" align="center">
           <template slot-scope="{ data }">
-            <Poptip content="确认完成该订单？" @confirm="finishOrder(datas, data)" v-if="data.status === 1 || data.status === 5">
-              <button class="h-btn h-btn-s h-btn-primary">改为已支付</button>
-            </Poptip>
+            <p-del-button
+              permission="order.finish"
+              text="改为已支付"
+              @click="finishOrder(datas, data)"
+              v-if="data.status === 1 || data.status === 5"
+            ></p-del-button>
           </template>
         </TableItem>
       </Table>
       <p></p>
-      <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+      <Pagination
+        v-if="pagination.total > 0"
+        align="right"
+        v-model="pagination"
+        @change="changePage"
+      />
     </div>
   </div>
 </template>

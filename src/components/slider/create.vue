@@ -17,10 +17,9 @@
         <template v-slot:label>URL</template>
         <input type="text" v-model="slider.url" />
       </FormItem>
-       <FormItem label="升序" prop="sort">
+      <FormItem label="升序" prop="sort">
         <template v-slot:label>升序</template>
-        <Slider v-model="slider.sort" :range="{ start: 1, end: 2000 }"></Slider>
-        <p>{{ slider.sort }}</p>
+        <input type="number" v-model="slider.sort" />
       </FormItem>
       <FormItem>
         <Button color="primary" @click="create">添加</Button>
@@ -34,9 +33,9 @@ export default {
   data() {
     return {
       slider: {
-          thumb: '',
-          url: '',
-          sort: 0
+        thumb: '',
+        url: '',
+        sort: 0
       },
       rules: {
         required: ['thumb', 'url', 'sort']

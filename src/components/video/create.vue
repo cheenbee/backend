@@ -1,21 +1,44 @@
 <style lang="less"></style>
 <template>
-  <div class="">
+  <div class>
     <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">添加视频</span></div>
+      <div class="h-panel-bar">
+        <span class="h-panel-title">添加视频</span>
+      </div>
       <div class="h-panel-body">
         <p>
           <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
         </p>
 
-        <Form ref="form" mode="block" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="video">
+        <Form
+          ref="form"
+          mode="block"
+          :validOnChange="true"
+          :showErrorTip="true"
+          :labelWidth="110"
+          :rules="rules"
+          :model="video"
+        >
           <FormItem label="所属课程" prop="course_id">
             <template v-slot:label>所属课程</template>
-            <Select v-model="video.course_id" :datas="courses" keyName="id" titleName="title" :filterable="true" @change="selectCourse"></Select>
+            <Select
+              v-model="video.course_id"
+              :datas="courses"
+              keyName="id"
+              titleName="title"
+              :filterable="true"
+              @change="selectCourse"
+            ></Select>
           </FormItem>
           <FormItem label="章节" prop="chapter_id">
             <template v-slot:label>章节</template>
-            <Select v-model="video.chapter_id" :datas="chapters" keyName="id" titleName="title" :filterable="true"></Select>
+            <Select
+              v-model="video.chapter_id"
+              :datas="chapters"
+              keyName="id"
+              titleName="title"
+              :filterable="true"
+            ></Select>
           </FormItem>
           <FormItem label="视频名" prop="title">
             <template v-slot:label>视频名</template>
@@ -124,7 +147,7 @@ export default {
       this.video.is_show = 0;
 
       // 读取创建所需要的参数
-      R.Video.CreateParams().then(resp => {
+      R.Video.Create().then(resp => {
         this.courses = resp.data.courses;
       });
     },
@@ -135,7 +158,7 @@ export default {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
         this.video.render_desc = this.video.original_desc;
-        R.Video.Create(this.video).then(resp => {
+        R.Video.Store(this.video).then(resp => {
           HeyUI.$Message.success('添加成功');
           this.$router.push({ name: 'Video' });
         });

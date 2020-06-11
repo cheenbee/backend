@@ -10,7 +10,13 @@
         </FormItem>
         <FormItem label="会员">
           <template v-slot:label>会员</template>
-          <Select v-model="cond.role_id" :filterable="true" :datas="roles" keyName="id" titleName="name"></Select>
+          <Select
+            v-model="cond.role_id"
+            :filterable="true"
+            :datas="roles"
+            keyName="id"
+            titleName="name"
+          ></Select>
         </FormItem>
         <FormItem>
           <Button color="primary" @click="getData(true)">搜索</Button>
@@ -19,9 +25,15 @@
       </Form>
     </div>
     <div class="h-panel-body">
-      <p>
-        <Button class="h-btn h-btn-primary" icon="h-icon-plus" @click="create()">添加</Button>
-      </p>
+      <div class="mb-10">
+        <p-button
+          glass="h-btn h-btn-primary"
+          icon="h-icon-plus"
+          permission="member.store"
+          text="添加"
+          @click="create()"
+        ></p-button>
+      </div>
       <Table :loading="loading" :datas="datas" @sort="sortEvt">
         <TableItem prop="id" title="ID"></TableItem>
         <TableItem title="头像">
@@ -32,31 +44,35 @@
         <TableItem prop="nick_name" title="昵称"></TableItem>
         <TableItem prop="mobile" title="手机号"></TableItem>
         <TableItem prop="created_at" title="注册时间" :sort="true"></TableItem>
-        <TableItem title="激活">
-          <template slot-scope="{data}">
-            <span v-if="data.is_active === 1">是</span>
-            <span v-else>否</span>
-          </template>
-        </TableItem>
-        <TableItem title="锁定">
-          <template slot-scope="{data}">
-            <span v-if="data.is_lock === 1">是</span>
-            <span v-else>否</span>
-          </template>
-        </TableItem>
         <TableItem title="VIP">
           <template slot-scope="{data}">
             <template v-if="data.role">{{data.role.name}}</template>
           </template>
         </TableItem>
-        <TableItem title="操作" align="center" :width="80">
+        <TableItem title="操作" align="center" :width="160">
           <template slot-scope="{ data }">
-            <button class="h-btn h-btn-s h-btn-primary" @click="edit(data)">编辑</button>
+            <p-button
+              glass="h-btn h-btn-s h-btn-primary"
+              permission="member.edit"
+              text="编辑"
+              @click="edit(data)"
+            ></p-button>
+            <p-button
+              glass="h-btn h-btn-s h-btn-primary"
+              permission="member.detail"
+              text="详情"
+              @click="detail(data)"
+            ></p-button>
           </template>
         </TableItem>
       </Table>
       <p></p>
-      <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+      <Pagination
+        v-if="pagination.total > 0"
+        align="right"
+        v-model="pagination"
+        @change="changePage"
+      />
     </div>
   </div>
 </template>
@@ -115,6 +131,7 @@ export default {
     },
     create() {
       this.$Modal({
+        closeOnMask: false,
         component: {
           vue: resolve => {
             require(['./create'], resolve);
@@ -132,6 +149,7 @@ export default {
     },
     edit(item) {
       this.$Modal({
+        closeOnMask: false,
         component: {
           vue: resolve => {
             require(['./edit'], resolve);
@@ -146,6 +164,26 @@ export default {
               HeyUI.$Message.success('成功');
               this.getData(true);
             });
+          }
+        }
+      });
+    },
+    detail(item) {
+      this.$Modal({
+        hasCloseIcon: true,
+        closeOnMask: false,
+        component: {
+          vue: resolve => {
+            require(['./detail'], resolve);
+          },
+          datas: {
+            id: item.id
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            modal.close();
+            this.getData();
           }
         }
       });

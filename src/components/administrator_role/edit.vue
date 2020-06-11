@@ -1,28 +1,37 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">编辑角色</span></div>
-      <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
-        <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="role">
-          <FormItem label="角色名" prop="display_name">
-            <template v-slot:label>角色名</template>
-            <input type="text" v-model="role.display_name" />
-          </FormItem>
-          <FormItem label="描述" prop="description">
-            <template v-slot:label>描述</template>
-            <input type="text" v-model="role.description" />
-          </FormItem>
-          <FormItem>
-            <Button color="primary" @click="create">保存</Button>
-          </FormItem>
-        </Form>
-      </div>
-    </div>
+  <div style="padding: 20px">
+    <Form
+      v-width="400"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :labelWidth="110"
+      :rules="rules"
+      :model="role"
+    >
+      <FormItem label="权限" prop="permission_ids">
+        <template v-slot:label>权限</template>
+        <Select
+          v-model="role.permission_ids"
+          :datas="permissions"
+          :filterable="true"
+          :multiple="true"
+        ></Select>
+      </FormItem>
+      <FormItem label="角色名" prop="display_name">
+        <template v-slot:label>角色名</template>
+        <input type="text" v-model="role.display_name" />
+      </FormItem>
+      <FormItem label="描述" prop="description">
+        <template v-slot:label>描述</template>
+        <input type="text" v-model="role.description" />
+      </FormItem>
+      <FormItem>
+        <Button color="primary" @click="save">保存</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script>
@@ -35,7 +44,8 @@ export default {
       role: Role.parse({}),
       rules: {
         required: ['display_name', 'description']
-      }
+      },
+      permissions: []
     };
   },
   mounted() {
@@ -43,20 +53,32 @@ export default {
   },
   methods: {
     init() {
-      R.AdministratorRole.Edit({id:this.id}).then(resp => {
+      R.AdministratorRole.Edit({ id: this.id }).then(resp => {
         this.role = resp.data;
       });
+
+      R.AdministratorRole.Create().then(res => {
+        let data = res.data.permissions;
+        let permissions = [];
+        for (let key in data) {
+          permissions.push({
+            title: key,
+            isLabel: true
+          });
+          data[key].forEach(item => {
+            permissions.push({
+              title: item.display_name,
+              key: item.id
+            });
+          });
+        }
+        this.permissions = permissions;
+      });
     },
-    back() {
-      this.$router.push({ name: 'AdministratorRole' });
-    },
-    create() {
+    save() {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
-        R.AdministratorRole.Update(this.role).then(resp => {
-          HeyUI.$Message.success('成功');
-          this.$router.push({ name: 'AdministratorRole' });
-        });
+        this.$emit('success', this.role);
       }
     }
   }

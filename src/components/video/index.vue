@@ -10,7 +10,13 @@
         </FormItem>
         <FormItem label="课程">
           <template v-slot:label>课程</template>
-          <Select v-model="cond.course_id" :filterable="true" :datas="courses" keyName="id" titleName="title"></Select>
+          <Select
+            v-model="cond.course_id"
+            :filterable="true"
+            :datas="courses"
+            keyName="id"
+            titleName="title"
+          ></Select>
         </FormItem>
         <FormItem>
           <Button color="primary" @click="getData(true)">搜索</Button>
@@ -19,15 +25,19 @@
       </Form>
     </div>
     <div class="h-panel-body">
-      <p>
-        <Button class="h-btn h-btn-primary" icon="h-icon-plus" @click="create()">添加</Button>
-      </p>
+      <div class="mb-10">
+        <p-button
+          glass="h-btn h-btn-primary"
+          icon="h-icon-plus"
+          permission="video.store"
+          text="添加"
+          @click="create()"
+        ></p-button>
+      </div>
       <Table :loading="loading" :datas="datas" @sort="sortEvt">
         <TableItem prop="id" title="ID"></TableItem>
         <TableItem title="课程">
-          <template slot-scope="{ data }">
-            {{data.course.title}}
-          </template>
+          <template slot-scope="{ data }">{{data.course.title}}</template>
         </TableItem>
         <TableItem prop="title" title="视频"></TableItem>
         <TableItem prop="charge" title="价格" unit="元" :sort="true"></TableItem>
@@ -40,15 +50,24 @@
         </TableItem>
         <TableItem title="操作" align="center" :width="200">
           <template slot-scope="{ data }">
-            <Poptip content="确认删除？" @confirm="remove(datas, data)">
-              <button class="h-btn h-btn-s h-btn-red">删除</button>
-            </Poptip>
-            <button class="h-btn h-btn-s h-btn-primary" @click="edit(data)">编辑</button>
+            <p-del-button permission="video.destroy" @click="remove(datas, data)"></p-del-button>
+            <p-button
+              glass="h-btn h-btn-s h-btn-primary"
+              permission="video.edit"
+              text="编辑"
+              @click="edit(data)"
+            ></p-button>
           </template>
         </TableItem>
       </Table>
-      <p></p>
-      <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+      <div class="mt-10">
+        <Pagination
+          v-if="pagination.total > 0"
+          align="right"
+          v-model="pagination"
+          @change="changePage"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +78,7 @@ export default {
       pagination: {
         page: 1,
         size: 20,
-        total: 0,
+        total: 0
       },
       cond: {
         keywords: '',

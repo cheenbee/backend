@@ -3,30 +3,26 @@
 <template>
   <div style="padding: 30px">
     <div style="margin-bottom: 15px;">
-      <Button color="primary" @click="close()">关闭</Button>
-    </div>
-    <div style="margin-bottom: 15px;">
       <Table :loading="loading" :datas="list">
         <TableItem title="ID" prop="id"></TableItem>
-      <TableItem title="用户">
-        <template slot-scope="{ data }">
-          {{users[data.user_id].nick_name}}
-        </template>
-      </TableItem>
-      <TableItem title="看完">
-        <template slot-scope="{ data }">
-          {{data.is_watched === 1 ? '是' : '否'}}
-        </template>
-      </TableItem>
-      <TableItem title="看完时间">
-        <template slot-scope="{ data }">
-          {{data.watched_at}}
-        </template>
-      </TableItem>
-    </Table>
+        <TableItem title="用户">
+          <template slot-scope="{ data }">{{users[data.user_id].nick_name}}</template>
+        </TableItem>
+        <TableItem title="看完">
+          <template slot-scope="{ data }">{{data.is_watched === 1 ? '是' : '否'}}</template>
+        </TableItem>
+        <TableItem title="看完时间">
+          <template slot-scope="{ data }">{{data.watched_at}}</template>
+        </TableItem>
+      </Table>
     </div>
 
-    <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+    <Pagination
+      v-if="pagination.total > 0"
+      align="right"
+      v-model="pagination"
+      @change="changePage"
+    />
   </div>
 </template>
 
@@ -65,9 +61,6 @@ export default {
     changePage() {
       this.pagination.page = 1;
       this.init();
-    },
-    close() {
-      this.$emit('close');
     }
   }
 };

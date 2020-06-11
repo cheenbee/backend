@@ -1,32 +1,47 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">添加管理员</span></div>
-      <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
-        <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="administrator">
-          <FormItem label="姓名" prop="name">
-            <template v-slot:label>姓名</template>
-            <input type="text" v-model="administrator.name" />
-          </FormItem>
-          <FormItem label="邮箱" prop="email">
-            <template v-slot:label>邮箱</template>
-            <input type="text" v-model="administrator.email" />
-          </FormItem>
-          <FormItem label="密码" prop="password">
-            <template v-slot:label>密码</template>
-            <input type="text" v-model="administrator.password" />
-          </FormItem>
-          <FormItem>
-            <Button color="primary" @click="create">添加</Button>
-          </FormItem>
-        </Form>
-      </div>
-    </div>
+  <div style="padding: 20px">
+    <Form
+      v-width="400"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :labelWidth="110"
+      :rules="rules"
+      :model="administrator"
+    >
+      <FormItem label="角色" prop="roles">
+        <template v-slot:label>角色</template>
+        <Select
+          v-model="administrator.role_id"
+          :datas="roles"
+          keyName="id"
+          titleName="display_name"
+          :filterable="true"
+          :multiple="true"
+        ></Select>
+      </FormItem>
+      <FormItem label="姓名" prop="name">
+        <template v-slot:label>姓名</template>
+        <input type="text" v-model="administrator.name" />
+      </FormItem>
+      <FormItem label="邮箱" prop="email">
+        <template v-slot:label>邮箱</template>
+        <input type="text" v-model="administrator.email" />
+      </FormItem>
+      <FormItem label="密码" prop="password">
+        <template v-slot:label>密码</template>
+        <input type="text" v-model="administrator.password" />
+      </FormItem>
+      <FormItem label="禁止登录" prop="is_ban_login">
+        <template v-slot:label>禁止登录</template>
+        <h-switch v-model="administrator.is_ban_login" :trueValue="1" :falseValue="0"></h-switch>
+      </FormItem>
+      <FormItem>
+        <Button color="primary" @click="create">添加</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script>
@@ -38,26 +53,22 @@ export default {
       administrator: Administrator.parse({}),
       rules: {
         required: ['name', 'email', 'password']
-      }
+      },
+      roles: []
     };
   },
   mounted() {
-    this.init();
+    R.Administrator.Create().then(res => {
+      this.roles = res.data.roles;
+    });
   },
   methods: {
-    init() {},
-    back() {
-      this.$router.push({ name: 'Administrator' });
-    },
     create() {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
         let data = this.administrator;
         data.password_confirmation = data.password;
-        R.Administrator.Create(this.administrator).then(resp => {
-          HeyUI.$Message.success('添加成功');
-          this.$router.push({ name: 'Administrator' });
-        });
+        this.$emit('success', data);
       }
     }
   }

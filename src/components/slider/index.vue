@@ -4,9 +4,15 @@
       <span class="h-panel-title">幻灯片</span>
     </div>
     <div class="h-panel-body">
-      <p>
-        <Button class="h-btn h-btn-s h-btn-primary" icon="h-icon-plus" @click="create()">添加</Button>
-      </p>
+      <div class="mb-10">
+        <p-button
+          glass="h-btn h-btn-primary"
+          icon="h-icon-plus"
+          permission="slider.store"
+          text="添加"
+          @click="create()"
+        ></p-button>
+      </div>
       <Table :loading="loading" :datas="datas">
         <TableItem title="封面">
           <template slot-scope="{data}">
@@ -17,10 +23,13 @@
         <TableItem prop="url" title="URL"></TableItem>
         <TableItem title="操作" align="center" :width="200">
           <template slot-scope="{ data }">
-            <Poptip content="确认删除？" @confirm="remove(datas, data)">
-              <button class="h-btn h-btn-s h-btn-red">删除</button>
-            </Poptip>
-            <button class="h-btn h-btn-s h-btn-primary" @click="edit(data)">编辑</button>
+            <p-del-button permission="slider.destroy" @click="remove(datas, data)"></p-del-button>
+            <p-button
+              glass="h-btn h-btn-s h-btn-primary"
+              permission="slider.edit"
+              text="编辑"
+              @click="edit(data)"
+            ></p-button>
           </template>
         </TableItem>
       </Table>

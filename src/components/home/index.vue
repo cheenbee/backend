@@ -2,7 +2,9 @@
   <Row>
     <Cell :width="24">
       <div class="table-basic-vue frame-page h-panel">
-        <div class="h-panel-bar"><span class="h-panel-title">首页</span></div>
+        <div class="h-panel-bar">
+          <span class="h-panel-title">首页</span>
+        </div>
         <div class="h-panel-body">
           <Row>
             <Cell class="text-center" :width="8">
@@ -23,7 +25,9 @@
     </Cell>
     <Cell :width="24">
       <div class="table-basic-vue frame-page h-panel">
-        <div class="h-panel-bar"><span class="h-panel-title">系统信息</span></div>
+        <div class="h-panel-bar">
+          <span class="h-panel-title">系统信息</span>
+        </div>
         <div class="h-panel-body">
           <Row>
             <Cell class="text-center" :width="8">
@@ -69,12 +73,13 @@ export default {
       R.Dashboard.index().then(resp => {
         this.index = resp.data;
       });
+      R.Dashboard.check().then(resp => {});
     },
     getSystemInfo() {
       R.Dashboard.systemInfo().then(resp => {
         this.systemInfo = resp.data;
       });
-    },
+    }
   }
 };
 </script>

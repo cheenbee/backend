@@ -1,6 +1,15 @@
 <template>
   <div style="padding: 15px;">
-    <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="link">
+    <Form
+      v-width="400"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :labelWidth="110"
+      :rules="rules"
+      :model="link"
+    >
       <FormItem label="链接名" prop="name">
         <template v-slot:label>链接名</template>
         <input type="text" v-model="link.name" />
@@ -11,8 +20,7 @@
       </FormItem>
       <FormItem label="升序" prop="sort">
         <template v-slot:label>升序</template>
-        <Slider v-model="link.sort" :show="show" :range="{ start: 1, end: 2000 }"></Slider>
-        <p>{{ link.sort }}</p>
+        <input type="number" v-model="link.sort" />
       </FormItem>
       <FormItem>
         <Button color="primary" @click="create">保存</Button>

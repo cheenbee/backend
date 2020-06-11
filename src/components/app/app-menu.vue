@@ -1,19 +1,18 @@
 <style lang="less">
-
-.app-menu{
-  .h-menu{
+.app-menu {
+  .h-menu {
     font-size: 14px;
-    .h-menu-li-selected{
+    .h-menu-li-selected {
       .h-menu-show:after {
         width: 4px;
       }
     }
-    > li >.h-menu-show {
+    > li > .h-menu-show {
       font-size: 15px;
       .h-menu-show-icon {
         font-size: 20px;
       }
-      .h-menu-show-desc{
+      .h-menu-show-desc {
         transition: opacity 0.1s cubic-bezier(0.645, 0.045, 0.355, 1), width 0.1s cubic-bezier(0.645, 0.045, 0.355, 1);
       }
     }
@@ -27,19 +26,22 @@
   .h-menu.h-menu-white {
     color: rgb(49, 58, 70);
   }
-
 }
-
 </style>
 <template>
   <div class="app-menu">
     <appLogo></appLogo>
-    <Menu :datas="menus" :inlineCollapsed="siderCollapsed" @click="trigger" ref='menu' :className="`h-menu-${theme}`"></Menu>
+    <Menu
+      :datas="menus"
+      :inlineCollapsed="siderCollapsed"
+      @click="trigger"
+      ref="menu"
+      :className="`h-menu-${theme}`"
+    ></Menu>
     <div class="app-menu-mask" @click="hideMenu"></div>
   </div>
 </template>
 <script>
-
 import { mapState } from 'vuex';
 import appLogo from './app-logo';
 import { getMenus } from 'js/config/menu-config';
@@ -63,7 +65,7 @@ export default {
     const listener = G.addlistener('SYS_MENU_UPDATE', () => {
       this.init();
     });
-    this.$once('hook:beforeDestroy', function () {
+    this.$once('hook:beforeDestroy', function() {
       G.removelistener(listener);
     });
   },
@@ -72,7 +74,10 @@ export default {
   },
   methods: {
     init() {
-      this.menus = getMenus(G.get('SYS_MENUS'));
+      R.User.menus().then(res => {
+        this.menus = res.data.menus;
+        this.menuSelect();
+      });
       this.$nextTick(() => {
         this.menuSelect();
       });

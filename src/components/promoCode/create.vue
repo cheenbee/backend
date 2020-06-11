@@ -1,14 +1,21 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">添加优惠码</span></div>
+  <div>
+    <div class="h-panel">
+      <div class="h-panel-bar">
+        <span class="h-panel-title">添加优惠码</span>
+      </div>
       <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
-        <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="PromoCode">
+        <Form
+          v-width="400"
+          mode="block"
+          ref="form"
+          :validOnChange="true"
+          :showErrorTip="true"
+          :labelWidth="110"
+          :rules="rules"
+          :model="PromoCode"
+        >
           <FormItem label="优惠码" prop="code">
             <template v-slot:label>优惠码</template>
             <input type="text" v-model="PromoCode.code" />
@@ -38,6 +45,7 @@
 
           <FormItem>
             <Button color="primary" @click="create">添加</Button>
+            <Button @click="close()">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -56,22 +64,15 @@ export default {
       }
     };
   },
-  mounted() {
-    this.init();
-  },
   methods: {
-    init() {},
-    back() {
-      this.$router.push({ name: 'PromoCode' });
-    },
     create() {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
-        R.PromoCode.Create(this.PromoCode).then(resp => {
-          HeyUI.$Message.success('添加成功');
-          this.$router.push({ name: 'PromoCode' });
-        });
+        this.$emit('success', this.PromoCode);
       }
+    },
+    close() {
+      this.$emit('close');
     }
   }
 };

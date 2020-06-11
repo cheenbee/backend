@@ -1,6 +1,14 @@
 <template>
   <div style="padding: 15px;">
-    <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :rules="rules" :model="slider">
+    <Form
+      v-width="400"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :rules="rules"
+      :model="slider"
+    >
       <FormItem label="封面" prop="thumb">
         <template v-slot:label>封面</template>
         <image-upload v-model="slider.thumb" name="封面"></image-upload>
@@ -11,8 +19,7 @@
       </FormItem>
       <FormItem label="升序" prop="sort">
         <template v-slot:label>升序</template>
-        <Slider v-model="slider.sort" :range="{ start: 1, end: 2000 }"></Slider>
-        <p>{{ slider.sort }}</p>
+        <input type="number" v-model="slider.sort" />
       </FormItem>
       <FormItem>
         <Button color="primary" @click="create">保存</Button>

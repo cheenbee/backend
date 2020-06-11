@@ -1,10 +1,18 @@
 <template>
   <div class="table-basic-vue frame-page h-panel">
-    <div class="h-panel-bar"><span class="h-panel-title">首页导航</span></div>
+    <div class="h-panel-bar">
+      <span class="h-panel-title">首页导航</span>
+    </div>
     <div class="h-panel-body">
-      <p>
-        <Button class="h-btn h-btn-primary" icon="h-icon-plus" @click="create()">添加</Button>
-      </p>
+      <div class="mb-10">
+        <p-button
+          glass="h-btn h-btn-primary"
+          icon="h-icon-plus"
+          permission="nav.store"
+          text="添加"
+          @click="create()"
+        ></p-button>
+      </div>
       <Table :loading="loading" :datas="datas">
         <TableItem prop="id" title="ID"></TableItem>
         <TableItem prop="sort" title="升序"></TableItem>
@@ -12,15 +20,24 @@
         <TableItem prop="url" title="Url"></TableItem>
         <TableItem title="操作" align="center" :width="200">
           <template slot-scope="{ data }">
-            <Poptip content="确认删除？" @confirm="remove(datas, data)">
-              <button class="h-btn h-btn-s h-btn-red">删除</button>
-            </Poptip>
-            <button class="h-btn h-btn-s h-btn-primary" @click="edit(data)">编辑</button>
+            <p-del-button permission="nav.destroy" @click="remove(datas, data)"></p-del-button>
+            <p-button
+              glass="h-btn h-btn-s h-btn-primary"
+              permission="nav.edit"
+              text="编辑"
+              @click="edit(data)"
+            ></p-button>
           </template>
         </TableItem>
       </Table>
-      <p></p>
-      <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+      <div class="mt-10">
+        <Pagination
+          v-if="pagination.total > 0"
+          align="right"
+          v-model="pagination"
+          @change="changePage"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +78,23 @@ export default {
       });
     },
     create() {
-      this.$router.push({ name: 'NavCreate' });
+      this.$Modal({
+        closeOnMask: false,
+        component: {
+          vue: resolve => {
+            require(['./create'], resolve);
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            modal.close();
+            R.Nav.Create(data).then(resp => {
+              HeyUI.$Message.success('成功');
+              this.getData(true);
+            });
+          }
+        }
+      });
     },
     remove(data, item) {
       R.Nav.Delete({ id: item.id }).then(resp => {
@@ -70,7 +103,26 @@ export default {
       });
     },
     edit(item) {
-      this.$router.push({ name: 'NavEdit', params: { id: item.id } });
+      this.$Modal({
+        closeOnMask: false,
+        component: {
+          vue: resolve => {
+            require(['./edit'], resolve);
+          },
+          datas: {
+            id: item.id
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            modal.close();
+            R.Nav.Update(data).then(resp => {
+              HeyUI.$Message.success('成功');
+              this.getData(true);
+            });
+          }
+        }
+      });
     }
   }
 };

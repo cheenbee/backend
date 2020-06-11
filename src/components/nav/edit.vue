@@ -1,18 +1,24 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">编辑首页导航</span></div>
+  <div class>
+    <div class="h-panel">
+      <div class="h-panel-bar">
+        <span class="h-panel-title">编辑首页导航</span>
+      </div>
       <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
-        <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="nav">
+        <Form
+          v-width="400"
+          mode="block"
+          ref="form"
+          :validOnChange="true"
+          :showErrorTip="true"
+          :labelWidth="110"
+          :rules="rules"
+          :model="nav"
+        >
           <FormItem label="升序" prop="sort">
             <template v-slot:label>升序</template>
-            <Slider v-model="nav.sort" :range="{ start: 1, end: 2000 }"></Slider>
-            <p>{{ nav.sort }}</p>
+            <input type="number" v-model="nav.sort" />
           </FormItem>
           <FormItem label="链接名" prop="name">
             <template v-slot:label>链接名</template>
@@ -24,6 +30,7 @@
           </FormItem>
           <FormItem>
             <Button color="primary" @click="create">保存</Button>
+            <Button @click="close()">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -52,17 +59,14 @@ export default {
         this.nav = resp.data;
       });
     },
-    back() {
-      this.$router.push({ name: 'Nav' });
-    },
     create() {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
-        R.Nav.Update(this.nav).then(resp => {
-          HeyUI.$Message.success('成功');
-          this.$router.push({ name: 'Nav' });
-        });
+        this.$emit('success', this.nav);
       }
+    },
+    close() {
+      this.$emit('close');
     }
   }
 };

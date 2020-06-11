@@ -15,7 +15,13 @@
       <Form :labelWidth="110">
         <FormItem label="课程">
           <template v-slot:label>课程</template>
-          <Select v-model="filter.course_id" :filterable="true" :datas="courses" keyName="id" titleName="title"></Select>
+          <Select
+            v-model="filter.course_id"
+            :filterable="true"
+            :datas="courses"
+            keyName="id"
+            titleName="title"
+          ></Select>
         </FormItem>
         <FormItem>
           <Button color="primary" @click="getData(true)">搜索</Button>
@@ -24,19 +30,24 @@
       </Form>
 
       <div style="margin-bottom: 15px;">
-        <Button color="primary" @click="deleteSubmit()">批量删除</Button>
+        <p-del-button permission="course_comment.destroy" @click="deleteSubmit()"></p-del-button>
       </div>
 
       <Table :loading="loading" :datas="datas" :checkbox="true" ref="table">
         <TableItem prop="id" title="ID"></TableItem>
         <TableItem title="用户">
           <template slot-scope="{ data }">
-            <span>{{data.user.nick_name}}</span>
+            <span v-if="users[data.user_id]">{{users[data.user_id].nick_name}}</span>
+            <span class="red" v-else>不存在</span>
           </template>
         </TableItem>
         <TableItem title="课程">
           <template slot-scope="{ data }">
-            <a v-if="data.course" :href="'/course/' + data.course.id + '/' + data.course.slug" target="_blank">{{data.course.title}}</a>
+            <a
+              v-if="data.course"
+              :href="'/course/' + data.course.id + '/' + data.course.slug"
+              target="_blank"
+            >{{data.course.title}}</a>
             <span class="red" v-else>已删除</span>
           </template>
         </TableItem>
@@ -48,7 +59,12 @@
         <TableItem prop="created_at" title="时间"></TableItem>
       </Table>
       <p></p>
-      <Pagination v-if="pagination.total > 0" align="right" v-model="pagination" @change="changePage" />
+      <Pagination
+        v-if="pagination.total > 0"
+        align="right"
+        v-model="pagination"
+        @change="changePage"
+      />
     </div>
   </div>
 </template>
@@ -66,7 +82,8 @@ export default {
       filter: {
         course_id: null
       },
-      courses: []
+      courses: [],
+      users: []
     };
   },
   mounted() {
@@ -90,6 +107,7 @@ export default {
         this.datas = resp.data.data.data;
         this.pagination.total = resp.data.data.total;
         this.courses = resp.data.courses;
+        this.users = resp.data.users;
         this.loading = false;
       });
     },

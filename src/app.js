@@ -11,6 +11,8 @@ import 'js/vue/components';
 import 'js/vue/filters';
 import ImageUpload from './components/common/image';
 import Warn from './components/common/warn';
+import PButton from './components/common/button';
+import PDelButton from './components/common/del-button';
 
 require('./css/app.less');
 
@@ -23,8 +25,10 @@ require('./css/app.less');
 heyuiConfig();
 Vue.use(HeyUI);
 
-Vue.component('ImageUpload', ImageUpload)
-Vue.component('Warn', Warn)
+Vue.component('ImageUpload', ImageUpload);
+Vue.component('Warn', Warn);
+Vue.component('PButton', PButton);
+Vue.component('PDelButton', PDelButton);
 
 
 const router = routerConfig();

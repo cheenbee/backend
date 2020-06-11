@@ -1,18 +1,24 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
-      <div class="h-panel-bar"><span class="h-panel-title">编辑课程分类</span></div>
+  <div class>
+    <div class="h-panel">
+      <div class="h-panel-bar">
+        <span class="h-panel-title">编辑课程分类</span>
+      </div>
       <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
-        <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="category">
+        <Form
+          v-width="400"
+          mode="block"
+          ref="form"
+          :validOnChange="true"
+          :showErrorTip="true"
+          :labelWidth="110"
+          :rules="rules"
+          :model="category"
+        >
           <FormItem label="升序" prop="sort">
             <template v-slot:label>升序</template>
-            <Slider v-model="category.sort" :range="{ start: 1, end: 2000 }"></Slider>
-            <p>{{ category.sort }}</p>
+            <input type="number" v-model="category.sort" />
           </FormItem>
           <FormItem label="分类名" prop="name">
             <template v-slot:label>分类名</template>
@@ -24,6 +30,7 @@
           </FormItem>
           <FormItem>
             <Button color="primary" @click="create">保存</Button>
+            <Button @click="close()">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -45,7 +52,6 @@ export default {
   },
   mounted() {
     this.init();
-    this.category.sort = 1;
   },
   methods: {
     init() {
@@ -53,17 +59,14 @@ export default {
         this.category = resp.data;
       });
     },
-    back() {
-      this.$router.push({ name: 'CourseCategory' });
-    },
     create() {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
-        R.CourseCategory.Update(this.category).then(resp => {
-          HeyUI.$Message.success('编辑成功');
-          this.$router.push({ name: 'CourseCategory' });
-        });
+        this.$emit('success', this.category);
       }
+    },
+    close() {
+      this.$emit('close');
     }
   }
 };

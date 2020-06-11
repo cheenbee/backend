@@ -1,26 +1,31 @@
 <style lang="less"></style>
 <template>
-  <div class="">
-    <div class="table-basic-vue frame-page h-panel">
+  <div class>
+    <div class="h-panel">
       <div class="h-panel-bar">
         <span class="h-panel-title">编辑课程章节</span>
       </div>
       <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-        <Form ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="chapter">
+        <Form
+          v-width="400"
+          ref="form"
+          :validOnChange="true"
+          :showErrorTip="true"
+          :labelWidth="110"
+          :rules="rules"
+          :model="chapter"
+        >
           <FormItem label="章节名" prop="title">
             <template v-slot:label>章节名</template>
             <input type="text" v-model="chapter.title" />
           </FormItem>
           <FormItem label="升序" prop="sort">
             <template v-slot:label>升序</template>
-            <Slider v-model="chapter.sort" :range="{ start: 1, end: 100 }"></Slider>
-            <p>{{ chapter.sort }}</p>
+            <input type="number" v-model="chapter.sort" />
           </FormItem>
           <FormItem>
             <Button color="primary" @click="create">保存</Button>
+            <Button @click="close">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -32,6 +37,7 @@ import Course from 'model/Course';
 import Chapter from 'model/CourseChapter';
 
 export default {
+  props: ['id', 'cid'],
   data() {
     return {
       course: Course.parse({}),
@@ -42,9 +48,8 @@ export default {
     };
   },
   mounted() {
-    this.course.id = this.$route.params.cid;
-    this.chapter.sort = 1;
-    this.chapter.id = this.$route.params.id;
+    this.course.id = this.cid;
+    this.chapter.id = this.id;
     this.init();
   },
   methods: {
@@ -61,11 +66,11 @@ export default {
       if (validResult.result) {
         let data = this.chapter;
         data.course_id = this.course.id;
-        R.CourseChapter.Update(data).then(resp => {
-          HeyUI.$Message.success('添加成功');
-          this.$router.push({ name: 'CourseChapter', params: { cid: this.course.id } });
-        });
+        this.$emit('success', data);
       }
+    },
+    close() {
+      this.$emit('close');
     }
   }
 };
