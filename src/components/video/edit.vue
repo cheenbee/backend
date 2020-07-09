@@ -6,10 +6,6 @@
         <span class="h-panel-title">编辑视频</span>
       </div>
       <div class="h-panel-body">
-        <p>
-          <Button class="h-btn h-btn-primary" icon="icon-arrow-left" @click="back()">返回列表</Button>
-        </p>
-
         <Form
           ref="form"
           mode="block"
@@ -51,8 +47,8 @@
               <span class="h-input-addon">元</span>
             </div>
           </FormItem>
-          <FormItem label="禁止购买" prop="is_ban_sell">
-            <template v-slot:label>禁止购买</template>
+          <FormItem label="禁止单独购买" prop="is_ban_sell">
+            <template v-slot:label>禁止单独购买</template>
             <h-switch v-model="video.is_ban_sell" :trueValue="1" :falseValue="0"></h-switch>
           </FormItem>
           <FormItem label="简短介绍" prop="short_description">
@@ -69,15 +65,7 @@
           </FormItem>
           <FormItem label="是否显示" prop="is_show">
             <template v-slot:label>是否显示</template>
-            <h-switch v-model="video.is_show" :trueValue="1" :falseValue="-1"></h-switch>
-          </FormItem>
-          <FormItem label="SEO描述" prop="seo_description">
-            <template v-slot:label>SEO描述</template>
-            <textarea v-model="video.seo_description"></textarea>
-          </FormItem>
-          <FormItem label="SEO关键字" prop="seo_keywords">
-            <template v-slot:label>SEO关键字</template>
-            <textarea v-model="video.seo_keywords"></textarea>
+            <h-switch v-model="video.is_show" :trueValue="1" :falseValue="0"></h-switch>
           </FormItem>
 
           <FormItem label="上传视频">
@@ -93,8 +81,8 @@
             <template v-slot:label>腾讯云视频ID</template>
             <tencent-video v-model="video.tencent_video_id"></tencent-video>
           </FormItem>
-          <FormItem label="直链URL" prop="url" v-show="tab === '直链'">
-            <template v-slot:label>直链URL</template>
+          <FormItem label="视频URL地址（以mp4,m3u8等格式结尾的链接）" prop="url" v-show="tab === '直链'">
+            <template v-slot:label>视频URL地址（以mp4,m3u8等格式结尾的链接）</template>
             <input type="text" v-model="video.url" />
           </FormItem>
 
@@ -104,6 +92,43 @@
               <input type="text" v-model="video.duration" />
               <span class="h-input-addon">秒</span>
             </div>
+          </FormItem>
+
+          <FormItem label="试看时长" prop="free_seconds">
+            <template v-slot:label>试看时长</template>
+            <div class="h-input-group" v-width="200">
+              <input type="text" v-model="video.free_seconds" />
+              <span class="h-input-addon">秒</span>
+            </div>
+          </FormItem>
+
+          <FormItem label="禁止快进" prop="ban_drag">
+            <template v-slot:label>禁止快进</template>
+            <h-switch v-model="video.ban_drag" :trueValue="1" :falseValue="0"></h-switch>
+          </FormItem>
+
+          <FormItem label="评论开关" prop="comment_status">
+            <template v-slot:label>评论开关</template>
+            <Select v-model="video.comment_status" :datas="commentStatus"></Select>
+          </FormItem>
+
+          <FormItem label="Web播放器" prop="player_pc">
+            <template v-slot:label>Web播放器</template>
+            <Select v-model="video.player_pc" :datas="playerPc"></Select>
+          </FormItem>
+
+          <FormItem label="手机播放器" prop="player_h5">
+            <template v-slot:label>手机播放器</template>
+            <Select v-model="video.player_h5" :datas="playerH5"></Select>
+          </FormItem>
+
+          <FormItem label="SEO描述" prop="seo_description">
+            <template v-slot:label>SEO描述</template>
+            <textarea v-model="video.seo_description"></textarea>
+          </FormItem>
+          <FormItem label="SEO关键字" prop="seo_keywords">
+            <template v-slot:label>SEO关键字</template>
+            <textarea v-model="video.seo_keywords"></textarea>
           </FormItem>
 
           <FormItem>
@@ -135,8 +160,64 @@ export default {
       chapters: [],
       tabs: ['阿里云', '腾讯云', '直链'],
       tab: '阿里云',
+      commentStatus: [
+        {
+          title: '禁止评论',
+          key: 0
+        },
+        {
+          title: '所有人',
+          key: 1
+        },
+        {
+          title: '仅订阅',
+          key: 2
+        }
+      ],
+      playerPc: [
+        {
+          title: '默认',
+          key: 'xg'
+        },
+        {
+          title: '腾讯云',
+          key: 'tencent'
+        },
+        {
+          title: '阿里云',
+          key: 'aliyun'
+        }
+      ],
+      playerH5: [
+        {
+          title: '默认',
+          key: 'xg'
+        },
+        {
+          title: '腾讯云',
+          key: 'tencent'
+        },
+        {
+          title: '阿里云',
+          key: 'aliyun'
+        }
+      ],
       rules: {
-        required: ['course_id', 'title', 'charge', 'short_description', 'published_at', 'is_show', 'seo_description', 'seo_keywords', 'is_ban_sell']
+        required: [
+          'course_id',
+          'title',
+          'charge',
+          'short_description',
+          'published_at',
+          'is_show',
+          'is_ban_sell',
+          'ban_drag',
+          'player_pc',
+          'duration',
+          'player_h5',
+          'free_seconds',
+          'comment_status'
+        ]
       }
     };
   },
@@ -156,18 +237,22 @@ export default {
       }
     },
     init() {
-      this.video.id = this.id;
       this.video.is_show = 0;
+      this.video.is_ban_sell = 0;
+      this.video.ban_drag = 0;
+      this.video.comment_status = 0;
+      this.video.player_pc = 'xg';
+      this.video.player_h5 = 'xg';
+
+      R.Video.Edit({ id: this.id }).then(res => {
+        this.video = res.data.video;
+        this.tabActive();
+        this.selectCourse({ id: this.video.course_id });
+      });
 
       // 读取创建所需要的参数
       R.Video.Create().then(resp => {
         this.courses = resp.data.courses;
-      });
-
-      R.Video.Edit({ id: this.id }).then(resp => {
-        this.video = resp.data.video;
-        this.tabActive();
-        this.selectCourse({ id: this.video.course_id });
       });
     },
     back() {
@@ -177,10 +262,7 @@ export default {
       let validResult = this.$refs.form.valid();
       if (validResult.result) {
         this.video.render_desc = this.video.original_desc;
-        R.Video.Update(this.video).then(resp => {
-          HeyUI.$Message.success('添加成功');
-          this.$router.push({ name: 'Video' });
-        });
+        this.$emit('success', this.video);
       }
     },
     selectCourse(course) {

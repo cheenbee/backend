@@ -38,7 +38,7 @@ export default {
     },
     uploadFile(videoFile) {
       const tcVod = new TcVod({
-        getSignature: function() {
+        getSignature: function () {
           return R.VideoUpload.TencentAuthToken().then(response => {
             if (response.status !== 0) {
               HeyUI.$Message.error(response.message);
@@ -72,7 +72,7 @@ export default {
           this.process = '上传成功';
           this.vid = doneResult.fileId;
         })
-        .catch(function(err) {
+        .catch(function (err) {
           console.log(err);
           HeyUI.$Message.error('上传错误');
         });

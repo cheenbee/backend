@@ -36,13 +36,9 @@
       </div>
       <Table :loading="loading" :datas="datas" @sort="sortEvt">
         <TableItem prop="id" title="ID"></TableItem>
-        <TableItem title="头像">
-          <template slot-scope="{data}">
-            <Avatar type="female" :src="data.avatar"></Avatar>
-          </template>
-        </TableItem>
         <TableItem prop="nick_name" title="昵称"></TableItem>
         <TableItem prop="mobile" title="手机号"></TableItem>
+        <TableItem prop="credit1" title="积分" :sort="true"></TableItem>
         <TableItem prop="created_at" title="注册时间" :sort="true"></TableItem>
         <TableItem title="VIP">
           <template slot-scope="{data}">

@@ -47,7 +47,11 @@ module.exports = {
             new CopyPlugin([
                 { from: './aliyun-upload-sdk-1.4.0/', to: './dist/aliyun-upload-sdk-1.4.0/' },
             ])
-        ]
+        ],
+        performance: {
+            maxEntrypointSize: 10240000,
+            maxAssetSize: 10240000
+        }
     },
     copy: ['static/images/*', 'call/*']
 };

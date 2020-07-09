@@ -2,7 +2,12 @@
 </style>
 <template>
   <div>
-    <Layout class="app-frame" v-if="!loading" :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed">
+    <Layout
+      class="app-frame"
+      v-if="!loading"
+      :siderCollapsed="siderCollapsed"
+      :siderFixed="layoutConfig.siderFixed"
+    >
       <Sider :theme="layoutConfig.siderTheme">
         <appMenu :theme="layoutConfig.siderTheme"></appMenu>
       </Sider>
@@ -36,7 +41,7 @@ import appFooter from './app-footer';
 import SysTabs from '../common/sys-tabs';
 import store from 'js/vuex/store';
 import { mapState } from 'vuex';
-import { fullMenuKeys, isAuthPage } from 'js/config/menu-config';
+import { fullMenuKeys } from 'js/config/menu-config';
 
 export default {
   data() {

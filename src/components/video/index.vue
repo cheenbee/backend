@@ -26,31 +26,45 @@
     </div>
     <div class="h-panel-body">
       <div class="mb-10">
+        <p-del-button permission="video.destroy.multi" text="批量删除" @click="deleteSubmit()"></p-del-button>
         <p-button
-          glass="h-btn h-btn-primary"
+          glass="h-btn h-btn-primary h-btn-s"
           icon="h-icon-plus"
           permission="video.store"
           text="添加"
           @click="create()"
         ></p-button>
+
+        <p-button
+          glass="h-btn h-btn-primary h-btn-s"
+          permission="video.aliyun_hls.list"
+          text="阿里云视频HLS转码"
+          @click="showHlsPage()"
+        ></p-button>
+        <p-button
+          glass="h-btn h-btn-primary h-btn-s"
+          permission="addons.TencentCloudHls.videos"
+          text="腾讯云视频HLS转码"
+          @click="showTencentHlsPage()"
+        ></p-button>
+
+        <p-button
+          glass="h-btn h-btn-primary h-btn-s"
+          permission="video.aliyun_videos_import"
+          text="视频批量导入"
+          @click="showVideosImport()"
+        ></p-button>
       </div>
-      <Table :loading="loading" :datas="datas" @sort="sortEvt">
-        <TableItem prop="id" title="ID"></TableItem>
+      <Table :loading="loading" :checkbox="true" :datas="datas" ref="table" @sort="sortEvt">
+        <TableItem prop="id" title="ID" :sort="true" :width="80"></TableItem>
         <TableItem title="课程">
           <template slot-scope="{ data }">{{data.course.title}}</template>
         </TableItem>
         <TableItem prop="title" title="视频"></TableItem>
-        <TableItem prop="charge" title="价格" unit="元" :sort="true"></TableItem>
+        <TableItem prop="charge" title="价格" unit="元" :sort="true" :width="80"></TableItem>
         <TableItem prop="published_at" title="上线时间" :sort="true"></TableItem>
-        <TableItem title="显示">
+        <TableItem title="操作" align="center" :width="100">
           <template slot-scope="{ data }">
-            <span v-if="data.is_show === 1">是</span>
-            <span v-else>否</span>
-          </template>
-        </TableItem>
-        <TableItem title="操作" align="center" :width="200">
-          <template slot-scope="{ data }">
-            <p-del-button permission="video.destroy" @click="remove(datas, data)"></p-del-button>
             <p-button
               glass="h-btn h-btn-s h-btn-primary"
               permission="video.edit"
@@ -77,7 +91,7 @@ export default {
     return {
       pagination: {
         page: 1,
-        size: 20,
+        size: 10,
         total: 0
       },
       cond: {
@@ -125,16 +139,96 @@ export default {
       });
     },
     create() {
-      this.$router.push({ name: 'VideoCreate' });
+      this.$Modal({
+        closeOnMask: false,
+        hasCloseIcon: true,
+        component: {
+          vue: resolve => {
+            require(['./create'], resolve);
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            R.Video.Store(data).then(resp => {
+              modal.close();
+              HeyUI.$Message.success('成功');
+              this.getData(true);
+            });
+          }
+        }
+      });
     },
-    remove(data, item) {
-      R.Video.Delete({ id: item.id }).then(resp => {
+    deleteSubmit() {
+      let items = this.$refs.table.getSelection();
+      if (items.length === 0) {
+        this.$Message.error('请选择需要删除的视频');
+        return;
+      }
+      this.loading = true;
+      let ids = [];
+      for (let i = 0; i < items.length; i++) {
+        ids.push(items[i].id);
+      }
+      R.Video.MultiDelete({ ids: ids }).then(resp => {
         HeyUI.$Message.success('成功');
-        this.getData(true);
+        this.getData();
       });
     },
     edit(item) {
-      this.$router.push({ name: 'VideoEdit', params: { id: item.id } });
+      this.$Modal({
+        closeOnMask: false,
+        hasCloseIcon: true,
+        component: {
+          vue: resolve => {
+            require(['./edit'], resolve);
+          },
+          datas: {
+            id: item.id
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            R.Video.Update(data).then(resp => {
+              modal.close();
+              HeyUI.$Message.success('成功');
+              this.getData();
+            });
+          }
+        }
+      });
+    },
+    showHlsPage() {
+      this.$Modal({
+        closeOnMask: false,
+        hasCloseIcon: true,
+        component: {
+          vue: resolve => {
+            require(['../extentions/aliyunHls/video/index'], resolve);
+          }
+        }
+      });
+    },
+    showTencentHlsPage() {
+      this.$Modal({
+        closeOnMask: false,
+        hasCloseIcon: true,
+        component: {
+          vue: resolve => {
+            require(['@/components/extentions/tencentCloudHls/video/index'], resolve);
+          }
+        }
+      });
+    },
+    showVideosImport() {
+      this.$Modal({
+        closeOnMask: false,
+        hasCloseIcon: true,
+        component: {
+          vue: resolve => {
+            require(['../extentions/aliyunVideosImport/import'], resolve);
+          }
+        }
+      });
     }
   }
 };

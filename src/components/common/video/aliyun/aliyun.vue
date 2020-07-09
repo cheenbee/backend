@@ -2,11 +2,14 @@
   <div>
     <div class="h-input-group">
       <input type="text" v-model="vid" />
-      <Button color="yellow" @click="selectVideo"><i class="h-icon-upload"></i> 选择视频</Button>
+      <Button color="yellow" @click="selectVideo">
+        <i class="h-icon-upload"></i> 选择视频
+      </Button>
     </div>
     <input type="file" ref="aliyunfile" v-show="false" @change="fileChange" />
     <p v-show="process">
-      上传进度：<span>{{ process }}</span>
+      上传进度：
+      <span>{{ process }}</span>
     </p>
   </div>
 </template>
@@ -20,7 +23,7 @@ export default {
     }
   },
   mounted() {
-    this.aliyun = new AliyunUpload.Vod({
+    this.aliyun = new window.AliyunUpload.Vod({
       partSize: 1048576,
       parallel: 5,
       retryCount: 3,
@@ -30,32 +33,24 @@ export default {
         if (uploadInfo.videoId) {
           R.VideoUpload.AliyunAuthTokenRefresh({
             video_id: uploadInfo.videoId
-          })
-            .then(res => {
-              if (res.data.code === 500) {
-                HeyUI.$Message.error(res.data.message);
-              } else {
-                this.aliyun.setUploadAuthAndAddress(uploadInfo, res.data.upload_auth, res.data.upload_address, res.data.video_id);
-              }
-            })
-            .catch(err => {
-              HeyUI.$Message.error('request auth error.1');
-            });
+          }).then(res => {
+            if (res.status !== 0) {
+              HeyUI.$Message.error(res.message);
+            } else {
+              this.aliyun.setUploadAuthAndAddress(uploadInfo, res.data.upload_auth, res.data.upload_address, res.data.video_id);
+            }
+          });
         } else {
           R.VideoUpload.AliyunAuthTokenCreate({
             title: uploadInfo.file.name,
             filename: uploadInfo.file.name
-          })
-            .then(res => {
-              if (res.data.code === 500) {
-                HeyUI.$Message.error(res.data.message);
-              } else {
-                this.aliyun.setUploadAuthAndAddress(uploadInfo, res.data.upload_auth, res.data.upload_address, res.data.video_id);
-              }
-            })
-            .catch(err => {
-              HeyUI.$Message.error('request auth error.2');
-            });
+          }).then(res => {
+            if (res.status !== 0) {
+              HeyUI.$Message.error(res.message);
+            } else {
+              this.aliyun.setUploadAuthAndAddress(uploadInfo, res.data.upload_auth, res.data.upload_address, res.data.video_id);
+            }
+          });
         }
       },
       onUploadSucceed: uploadInfo => {
@@ -75,17 +70,13 @@ export default {
       onUploadTokenExpired: uploadInfo => {
         R.VideoUpload.AliyunAuthTokenRefresh({
           video_id: uploadInfo.videoId
-        })
-          .then(res => {
-            if (res.data.code === 500) {
-              HeyUI.$Message.error(res.data.message);
-            } else {
-              this.aliyun.resumeUploadWithAuth(res.data.upload_auth);
-            }
-          })
-          .catch(err => {
-            HeyUI.$Message.error('request auth error.3');
-          });
+        }).then(res => {
+          if (res.data.code === 500) {
+            HeyUI.$Message.error(res.data.message);
+          } else {
+            this.aliyun.resumeUploadWithAuth(res.data.upload_auth);
+          }
+        });
         // uploader.resumeUploadWithAuth(uploadAuth);
       },
       onUploadEnd: uploadInfo => {}

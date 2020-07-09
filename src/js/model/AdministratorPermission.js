@@ -1,7 +1,7 @@
 export default new Model({
-    display_name: '',
-    slug: '',
-    description: '',
-    method: [],
-    url: '',
+  display_name: '',
+  slug: '',
+  description: '',
+  method: [],
+  url: ''
 });

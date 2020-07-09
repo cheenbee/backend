@@ -1,8 +1,16 @@
 <template>
   <div>
-    <Button color="primary" @click="selectImage"><i class="h-icon-upload"></i> {{ this.name }}</Button><br>
-    <img :src="image" width="200px" v-if="image" style="margin-top: 10px;" /><br />
-    <input type="file" v-show="false" @change="change" ref="file" />
+    <div class="h-input-group">
+      <input type="text" placeholder="您也可以手动输入图片URL地址" v-model="image" />
+      <Button color="primary" @click="selectImage">
+        <i class="h-icon-upload"></i>
+        {{ this.name }}
+      </Button>
+    </div>
+    <div style="background-color: #f2f2f2">
+      <img :src="image" width="200px" v-if="image" style="margin-top: 10px;" />
+      <input type="file" v-show="false" @change="change" ref="file" />
+    </div>
   </div>
 </template>
 

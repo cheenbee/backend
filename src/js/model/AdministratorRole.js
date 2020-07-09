@@ -1,5 +1,5 @@
 export default new Model({
-    display_name: '',
-    slug: '',
-    description: '',
+  display_name: '',
+  slug: '',
+  description: ''
 });

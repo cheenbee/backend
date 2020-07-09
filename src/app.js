@@ -14,6 +14,10 @@ import Warn from './components/common/warn';
 import PButton from './components/common/button';
 import PDelButton from './components/common/del-button';
 
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
+Vue.use(mavonEditor);
+
 require('./css/app.less');
 
 // 开发环境判断
@@ -30,11 +34,10 @@ Vue.component('Warn', Warn);
 Vue.component('PButton', PButton);
 Vue.component('PDelButton', PDelButton);
 
-
 const router = routerConfig();
 
 export default new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app');

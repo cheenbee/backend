@@ -37,7 +37,7 @@
 import Permission from 'model/AdministratorPermission';
 
 export default {
-    props: ['id'],
+  props: ['id'],
   data() {
     return {
       permission: Permission.parse({}),
@@ -45,23 +45,23 @@ export default {
         required: ['display_name', 'description', 'url', 'method']
       },
       methods: [
-          {
-              title: 'GET',
-              key: 'GET',
-          },
-          {
-              title: 'POST',
-              key: 'POST',
-          },
-          {
-              title: 'PUT',
-              key: 'PUT',
-          },
-          {
-              title: 'DELETE',
-              key: 'DELETE',
-          },
-      ],
+        {
+          title: 'GET',
+          key: 'GET'
+        },
+        {
+          title: 'POST',
+          key: 'POST'
+        },
+        {
+          title: 'PUT',
+          key: 'PUT'
+        },
+        {
+          title: 'DELETE',
+          key: 'DELETE'
+        }
+      ]
     };
   },
   mounted() {
@@ -69,10 +69,10 @@ export default {
   },
   methods: {
     init() {
-        R.AdministratorPermission.Edit({id:this.id}).then(resp => {
-            this.permission = resp.data;
-            this.permission.method = this.permission.method.split('|');
-        })
+      R.AdministratorPermission.Edit({ id: this.id }).then(resp => {
+        this.permission = resp.data;
+        this.permission.method = this.permission.method.split('|');
+      });
     },
     back() {
       this.$router.push({ name: 'AdministratorPermission' });

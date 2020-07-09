@@ -45,7 +45,6 @@
 
           <FormItem>
             <Button color="primary" @click="create">添加</Button>
-            <Button @click="close()">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -70,9 +69,6 @@ export default {
       if (validResult.result) {
         this.$emit('success', this.PromoCode);
       }
-    },
-    close() {
-      this.$emit('close');
     }
   }
 };

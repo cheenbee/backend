@@ -44,7 +44,6 @@
 <script>
 import { mapState } from 'vuex';
 import appLogo from './app-logo';
-import { getMenus } from 'js/config/menu-config';
 
 export default {
   props: {
@@ -65,7 +64,7 @@ export default {
     const listener = G.addlistener('SYS_MENU_UPDATE', () => {
       this.init();
     });
-    this.$once('hook:beforeDestroy', function() {
+    this.$once('hook:beforeDestroy', function () {
       G.removelistener(listener);
     });
   },

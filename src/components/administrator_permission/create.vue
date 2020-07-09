@@ -48,23 +48,23 @@ export default {
         required: ['display_name', 'slug', 'description', 'url', 'method']
       },
       methods: [
-          {
-              title: 'GET',
-              key: 'GET',
-          },
-          {
-              title: 'POST',
-              key: 'POST',
-          },
-          {
-              title: 'PUT',
-              key: 'PUT',
-          },
-          {
-              title: 'DELETE',
-              key: 'DELETE',
-          },
-      ],
+        {
+          title: 'GET',
+          key: 'GET'
+        },
+        {
+          title: 'POST',
+          key: 'POST'
+        },
+        {
+          title: 'PUT',
+          key: 'PUT'
+        },
+        {
+          title: 'DELETE',
+          key: 'DELETE'
+        }
+      ]
     };
   },
   mounted() {

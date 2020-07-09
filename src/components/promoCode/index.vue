@@ -22,6 +22,20 @@
           text="添加"
           @click="create()"
         ></p-button>
+
+        <p-button
+          glass="h-btn h-btn-primary h-btn-s"
+          permission="addons.promo_code_multi_import.import"
+          text="视频批量导入"
+          @click="showImportPage()"
+        ></p-button>
+
+        <p-button
+          glass="h-btn h-btn-primary h-btn-s"
+          permission="addons.promo_code_multi_import.generate"
+          text="批量生成"
+          @click="showGeneratePage()"
+        ></p-button>
       </div>
       <Table :loading="loading" :datas="datas" :checkbox="true" ref="table" class="mb-10">
         <TableItem prop="code" title="优惠码"></TableItem>
@@ -86,6 +100,7 @@ export default {
     },
     create() {
       this.$Modal({
+        hasCloseIcon: true,
         closeOnMask: false,
         component: {
           vue: resolve => {
@@ -117,6 +132,34 @@ export default {
       R.PromoCode.Delete({ ids: ids }).then(resp => {
         HeyUI.$Message.success('成功');
         this.getData();
+      });
+    },
+    showImportPage() {
+      this.$Modal({
+        hasCloseIcon: true,
+        closeOnMask: false,
+        component: {
+          vue: resolve => {
+            require(['@/components/extentions/promoCodeImport/import'], resolve);
+          }
+        }
+      });
+    },
+    showGeneratePage() {
+      this.$Modal({
+        hasCloseIcon: true,
+        closeOnMask: false,
+        component: {
+          vue: resolve => {
+            require(['@/components/extentions/promoCodeImport/generate'], resolve);
+          }
+        },
+        events: {
+          success: (modal, data) => {
+            modal.close();
+            this.getData(true);
+          }
+        }
       });
     }
   }

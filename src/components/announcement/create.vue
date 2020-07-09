@@ -1,6 +1,14 @@
 <template>
   <div style="padding: 15px;">
-    <Form v-width="600" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :rules="rules" :model="announcement">
+    <Form
+      v-width="600"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :rules="rules"
+      :model="announcement"
+    >
       <FormItem label="标题" prop="title">
         <template v-slot:label>标题</template>
         <input type="text" v-model="announcement.title" />
@@ -18,8 +26,6 @@
 </template>
 <script>
 import TinymceEditor from '../common/tinymce';
-
-import Announcement from 'model/Announcement';
 
 export default {
   components: { TinymceEditor },

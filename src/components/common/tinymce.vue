@@ -34,7 +34,7 @@ export default {
           xhr.open('POST', '/backend/api/v1/upload/image/tinymce');
           xhr.setRequestHeader('Authorization', 'Bearer ' + Utils.getLocal('token'));
 
-          xhr.onload = function() {
+          xhr.onload = function () {
             var json;
 
             if (xhr.status !== 200) {

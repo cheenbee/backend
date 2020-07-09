@@ -1,5 +1,5 @@
 export default new Model({
-    url: '',
-    sort: 0,
-    name: ''
+  url: '',
+  sort: 0,
+  name: ''
 });

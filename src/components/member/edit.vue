@@ -1,6 +1,15 @@
 <template>
   <div style="padding: 15px;">
-    <Form v-width="400" mode="block" ref="form" :validOnChange="true" :showErrorTip="true" :labelWidth="110" :rules="rules" :model="user">
+    <Form
+      v-width="400"
+      mode="block"
+      ref="form"
+      :validOnChange="true"
+      :showErrorTip="true"
+      :labelWidth="110"
+      :rules="rules"
+      :model="user"
+    >
       <FormItem label="头像" prop="avatar">
         <template v-slot:label>头像</template>
         <image-upload v-model="user.avatar" name="选择头像"></image-upload>
@@ -28,7 +37,13 @@
       </FormItem>
       <FormItem label="VIP" prop="role_id">
         <template v-slot:label>VIP</template>
-        <Select v-model="user.role_id" :datas="roles" keyName="id" titleName="name" :filterable="true" @change="selectCourse"></Select>
+        <Select
+          v-model="user.role_id"
+          :datas="roles"
+          keyName="id"
+          titleName="name"
+          :filterable="true"
+        ></Select>
       </FormItem>
       <FormItem label="会员到期时间" prop="role_expired_at">
         <template v-slot:label>会员到期时间</template>
